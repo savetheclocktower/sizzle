@@ -11,8 +11,11 @@ var cache = null;
 var done = 0;
 
 if ( document.addEventListener && !document.querySelectorAll ) {
+  // Firefox <= 3.1 supports DOM mutation events, but not the Selectors API.
+  // The mutation events make caching possible, since they can tell us when the
+  // cache becomes stale.
 	cache = {};
-	function invalidate(){ cache = {}; }
+	function invalidate() { cache = {}; }
 	document.addEventListener("DOMAttrModified", invalidate, false);
 	document.addEventListener("DOMNodeInserted", invalidate, false);
 	document.addEventListener("DOMNodeRemoved", invalidate, false);
@@ -23,6 +26,8 @@ var Sizzle = function(selector, context, results) {
 	results = results || [];
 	context = context || document;
 
+  // Only element nodes and the document node are valid node types
+  // for a context search.
 	if ( context.nodeType !== 1 && context.nodeType !== 9 )
 		return [];
 	
@@ -624,6 +629,23 @@ if ( document.querySelectorAll ) (function(){
 				return makeArray( context.querySelectorAll(query) );
 			} catch(e){}
 		}
+    else {
+      // The qSA logic for non-document context is bizarre. To force it
+      // to treat the context node as the "root" of the selector, we must
+      // prepend the element's ID (or a temporary ID if it doesn't have one)
+      // onto the selector.
+      var id = context.id;
+      if ( !id || id === "" ) {
+        context.id = "__sizzle_temporary_id__";
+      }
+      var tempQuery = "#" + context.id + " " + query;
+      try {
+        return makeArray( document.querySelectorAll(tempQuery) );
+      } catch(e) {}
+      finally {
+        context.id = id;
+      }
+    }
 		
 		return oldSizzle(query, context, extra);
 	};

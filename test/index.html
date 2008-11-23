@@ -12,7 +12,7 @@
 			original$ = $;
 	</script>
 	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="../sizzle.js"></script>
+	<script type="text/javascript" src="../jquery-sizzle.js"></script>
 	<script type="text/javascript" src="qunit/testrunner.js"></script>
 	<script type="text/javascript" src="data/testrunner.js"></script>
 	<script type="text/javascript" src="unit/selector.js"></script>
@@ -170,12 +170,12 @@ Z</textarea>
 			</select>
 		</form>
 		<div id="moretests">
-			<form>
+			<form id="form_child_of_moretests">
 				<div id="checkedtest" style="display:none;">
-					<input type="radio" name="checkedtestradios" checked="checked"/>
-					<input type="radio" name="checkedtestradios" value="on"/>
-					<input type="checkbox" name="checkedtestcheckboxes" checked="checked"/>
-					<input type="checkbox" name="checkedtestcheckboxes" />
+					<input type="radio" id="radio_1" name="checkedtestradios" checked="checked"/>
+					<input type="radio" id="radio_2" name="checkedtestradios" value="on"/>
+					<input type="checkbox" id="check_1" name="checkedtestcheckboxes" checked="checked"/>
+					<input type="checkbox" id="check_2" name="checkedtestcheckboxes" />
 				</div>
 			</form>
 			<div id="nonnodes"><span>hi</span> there <!-- mon ami --></div>

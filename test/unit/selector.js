@@ -245,3 +245,23 @@ test("pseudo (:) selectors", function() {
 	t( "Headers", ":header", ["header", "banner", "userAgent"] );
 	t( "Has Children - :has()", "p:has(a)", ["firstp","ap","en","sap"] );
 });
+
+test("contextual queries", function() {
+  expect(4);
+  function find(name, context, query, expected) {
+    var n = jQuery(context);
+  	var f = n.find(query);
+  	var s = "";
+  	for ( var i = 0; i < f.length; i++ )
+  		s += (s && ",") + '"' + f[i].id + '"';
+  	isSet(f, q.apply(q,expected), name + " (" + query + ")");
+  }
+  
+  var div = document.getElementById('moretests');
+  find("Form element child", div, "form", ["form_child_of_moretests"]);
+  find("Direct child of form element", div, "form > div", ["checkedtest"]);
+  
+  var form = document.getElementById("form");
+  find("Input element descendants of form", form, "input", ["text1", "text2", "radio1", "radio2", "check1", "check2", "hidden1", "hidden2", "name"]);
+  find("ALL input descendants of form", form, ":input", ["text1", "text2", "radio1", "radio2", "check1", "check2", "hidden1", "hidden2", "name", "button", "area1", "select1", "select2", "select3"]);
+});
